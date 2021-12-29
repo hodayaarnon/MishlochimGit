@@ -14,7 +14,25 @@ namespace transportsAPI.DL
         public static SqlConnection con = new SqlConnection(cs);
         public int getCount()
         {
-            return 674;
+            string query = "select * from users";
+            SqlCommand com = new SqlCommand(query, con);
+            con.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(com);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                return dt.Rows.Count;
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                con.Close();
+            }
+            //return 674;
         }
         //get parameters and store proc
         public DataTable getData(string usp, string uParam)
