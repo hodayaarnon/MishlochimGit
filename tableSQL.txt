@@ -1,0 +1,121 @@
+--משלוחן- מי שמוגדר כמשלוחן של החברה
+create table transports 
+(
+   transportid int primary key identity(1,1) not null,
+   userid int
+   foreign key (userid) references users(userid),
+   requestdate datetime ,
+   deadlinetoexec datetime,
+   adresslat float null,
+   adresslng float null,
+   adress nvarchar(50),
+   city nvarchar(20),
+   foundvolunteer bit,
+   volunteerid int foreign key (voluteerid) references users(userid),
+   isactive bit,
+confirmed bit,
+
+destadresslat float null,
+   destadresslng float null,
+   destadress nvarchar(50),
+   destcity nvarchar(20),
+
+
+)
+create table transportsdetails 
+(
+   transportid int primary key identity(1,1) not null,
+   userid int
+   foreign key (userid) references users(userid),
+   --requestdate datetime ,
+   --deadlinetoexec datetime,
+   --adresslat float null,
+   --adresslng float null,
+   foundvolunteer bit,
+   arrived bit,
+   --statustransport nvarchar(20) 
+
+)
+
+create table communities 
+(
+   communityid int primary key identity(100,1) not null,
+   communityname nvarchar(50) not null,
+   allowedpublishing int 
+   foreign key (allowedpublishing) references roles(roleid),
+   requiredconfirm bit null
+
+)
+
+create table usercommunity
+(
+	 userid int foreign key (userid) references users(userid),
+	 communityid int foreign key (communityid) references communities(communityid),
+	 roleid int
+)
+
+create table roles
+(
+	roleid int primary key identity not null,
+	rolename nvarchar(20),--מנהל אתר, מנהל קבוצה למשתמש רגיל אין תפקיד-נאל
+
+)
+create table users 
+(
+   userid int primary key identity(100,1) not null,
+   userfirstname nvarchar(20),
+   userlastname nvarchar(20),
+   email nvarchar(50),
+   userpassword nvarchar(50),
+   adresslat float,
+   adresslng float,
+   adress nvarchar(50),
+   city nvarchar(20),
+  
+)
+--האם צריך או כדאי לעשות טבלת תפקידים איך נדע עבור כל חברה מי מורשה לפרסם??
+
+--קבוצות לתפקיד מפרסם הודעה, מפתח ראשי על 2 השדות יחד 
+create table allowedincomunity
+(
+	communityid int foreign key (communityid) references communities(communityid),
+	roleid int foreign key (roleid) references roles(roleid)
+)
+
+create table joincommunity
+(
+    userid int foreign key (userid) references users(userid),
+	communityid int foreign key (communityid) references communities(communityid),
+	joinasmanager bit default(0)
+)
+create table addcommunity
+(
+    userid int foreign key (userid) references users(userid),
+	communityname nvarchar(50),
+	description nvarchar(50),
+	city nvarchar(50),
+	
+)
+create table suggestionsfortaking
+(
+	volunteerid int foreign key (voluteerid) references users(userid),
+	transportid int foreign key (transportid) references transports(transportid),
+	confirmed bit default(0),
+	relevant bit, --if the transport is active
+
+)
+create table transporthistory
+(
+	transportid int foreign key (transportid) references transports(transportid),
+	volunteerid int foreign key (voluteerid) references users(userid),
+	transportstatus nvarchar(50),--מפתח זר
+	statusdate datetime default(),
+
+
+
+
+)
+create table statuses 
+(
+	statusname nvarchar(50) primary key
+)

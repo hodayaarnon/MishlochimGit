@@ -38,7 +38,7 @@ namespace transportsAPI.DL
 
         }
 
-        public int GetData1(string pSp)
+        public DataTable GetData1(string pSp)
         {
             DataSet ds = new DataSet();
             try
@@ -62,10 +62,45 @@ namespace transportsAPI.DL
                 Connection.Close();
                 Connection.Dispose();
             }
-            return ds.Tables[0].Rows.Count;
+            return ds.Tables[0];
         }
 
+        public DataTable GetData2(string pSp, string pParam)
+        {
+            
+            DataSet ds = new DataSet();
+            try
+            {
+                string parm = pParam.Replace("&", "&amp;");
+                SqlParameter param;
+                SqlDataAdapter adapter;
 
+                Connection.Open();
+                SqlCommand command = new SqlCommand(pSp, Connection);
+                command.CommandType = CommandType.StoredProcedure;
 
+                if (parm.Length != 0)
+                {
+                    param = new SqlParameter("@xmlparm", parm);
+                    param.Direction = ParameterDirection.Input;
+                    param.DbType = DbType.String;
+                    command.Parameters.Add(param);
+                }
+                adapter = new SqlDataAdapter(command);
+                adapter.Fill(ds, pSp);
+            }
+            catch (Exception err)
+            {
+                throw err;
+            }
+            finally
+            {
+                Connection.Close();
+                Connection.Dispose();
+            }
+            return ds.Tables[0];
+            
         }
+
+    }
 }

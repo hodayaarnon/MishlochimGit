@@ -11,23 +11,22 @@ using transportsAPI.Models;
 namespace transportsAPI.Controllers
 {
 
-    //[Route("api/[controller]")]
-    //[ApiController]
+    
 
     public class TransportsController : ApiController
     {
 
         transportsBL transBL1 = new transportsBL();
 
-        //GET: api/Products
+       
         [HttpGet]
         public HttpResponseMessage Get()
         {
             try
             {
                 transportsBL trBL1 = new transportsBL();
-                int count = trBL1.counttrans();
-                return Request.CreateResponse(HttpStatusCode.OK, count);
+                int[] arr = trBL1.counttrans();
+                return Request.CreateResponse(HttpStatusCode.OK, arr);
            }
             catch (Exception e)
             {
